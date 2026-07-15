@@ -213,6 +213,19 @@
     font-family:'JetBrains Mono',monospace; font-size:.8rem; cursor:pointer;
   }
 
+  /* ---------- monthsary ---------- */
+  .monthsary-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:24px 28px;
+    display:flex; align-items:center; justify-content:space-between; gap:20px; flex-wrap:wrap;
+  }
+  .monthsary-card.today{ border-color:rgba(204,156,60,0.55); box-shadow:0 0 0 1px rgba(204,156,60,0.25); }
+  .monthsary-label{ font-size:.68rem; letter-spacing:.16em; color:var(--muted); margin-bottom:6px; text-transform:uppercase; }
+  .monthsary-date{ font-family:'Fraunces',serif; font-size:1.4rem; color:var(--cream); }
+  .monthsary-date b{ color:var(--amber); }
+  .monthsary-count{ text-align:right; }
+  .monthsary-count .num{ font-family:'Fraunces',serif; font-size:2rem; color:var(--amber); line-height:1; }
+  .monthsary-count .unit{ font-size:.68rem; color:var(--muted); letter-spacing:.1em; }
+
   /* ---------- guess game ---------- */
   .guess-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; }
   @media (max-width:720px){ .guess-grid{ grid-template-columns:1fr; } }
@@ -251,6 +264,31 @@
   .guess-confirm-btns button.active-wrong{ border-color:#e08a8a; color:#e08a8a; }
   .guess-score{ font-family:'Fraunces',serif; font-size:1.05rem; color:var(--amber); margin-bottom:10px; }
   .guess-reset{ background:none; border:1px solid var(--line); color:var(--muted); border-radius:99px; padding:7px 14px; font-size:.68rem; cursor:pointer; font-family:'JetBrains Mono',monospace; }
+
+  /* ---------- compatibility quiz ---------- */
+  .quiz-grid{ display:grid; grid-template-columns:1fr 1fr; gap:22px; margin-bottom:22px; }
+  @media (max-width:720px){ .quiz-grid{ grid-template-columns:1fr; } }
+  .quiz-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px; }
+  .quiz-title{ font-family:'Fraunces',serif; font-size:1.1rem; color:var(--cream); margin-bottom:4px; }
+  .quiz-sub{ font-size:.7rem; color:var(--muted); margin-bottom:16px; }
+  .quiz-q{ margin-bottom:18px; }
+  .quiz-q-text{ font-size:.85rem; color:var(--cream); margin-bottom:8px; }
+  .quiz-opt{ display:flex; align-items:center; gap:9px; padding:7px 4px; font-size:.78rem; color:var(--cream); cursor:pointer; }
+  .quiz-opt input{ accent-color:var(--sky); }
+  .quiz-submit{
+    width:100%; background:var(--amber); color:#1a1204; border:none; border-radius:8px; padding:11px;
+    font-weight:700; font-family:'JetBrains Mono',monospace; font-size:.8rem; cursor:pointer; margin-top:4px;
+  }
+  .quiz-done{ text-align:center; padding:20px; color:var(--good); font-family:'Fraunces',serif; font-size:1rem; }
+  .quiz-result-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:24px; text-align:center; }
+  .quiz-score{ font-family:'Fraunces',serif; font-size:2.4rem; color:var(--amber); }
+  .quiz-score-label{ font-size:.72rem; color:var(--muted); letter-spacing:.1em; margin-bottom:18px; }
+  .quiz-breakdown{ text-align:left; display:flex; flex-direction:column; gap:6px; margin-top:16px; }
+  .quiz-breakdown-row{ display:flex; justify-content:space-between; gap:10px; padding:8px 10px; background:var(--panel-2); border-radius:8px; font-size:.76rem; }
+  .quiz-breakdown-row .m{ color:var(--good); }
+  .quiz-breakdown-row .x{ color:#e08a8a; }
+  .quiz-waiting{ font-size:.78rem; color:var(--muted); }
+
 
 
   .map-pin{ cursor:default; }
@@ -293,12 +331,26 @@
   .daily-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:26px; }
   .daily-date{ font-size:.68rem; letter-spacing:.12em; color:var(--muted); margin-bottom:12px; }
   .daily-q{ font-family:'Fraunces',serif; font-size:1.25rem; color:var(--cream); margin-bottom:20px; }
-  .confirm-row{ display:flex; gap:12px; flex-wrap:wrap; }
-  .confirm-btn{
-    flex:1; min-width:150px; background:var(--panel-2); border:1px solid var(--line); color:var(--cream);
-    border-radius:10px; padding:12px; font-family:'JetBrains Mono',monospace; font-size:.78rem; cursor:pointer;
+  .answer-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:640px){ .answer-row{ grid-template-columns:1fr; } }
+  .answer-box{ background:var(--panel-2); border:1px solid var(--line); border-radius:10px; padding:14px; }
+  .answer-top{ display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+  .answer-name{ font-size:.68rem; letter-spacing:.1em; color:var(--muted); text-transform:uppercase; }
+  .answer-copy{
+    background:none; border:1px solid var(--line); color:var(--muted); border-radius:6px; padding:3px 9px;
+    font-family:'JetBrains Mono',monospace; font-size:.65rem; cursor:pointer;
   }
-  .confirm-btn.on{ border-color:var(--good); color:var(--good); background:rgba(124,196,143,.08); }
+  .answer-copy:hover{ border-color:var(--sky); color:var(--cream); }
+  .answer-copy.copied{ border-color:var(--good); color:var(--good); }
+  .answer-box textarea{
+    width:100%; min-height:90px; background:transparent; border:none; resize:vertical;
+    color:var(--cream); font-family:'JetBrains Mono',monospace; font-size:.82rem; line-height:1.5;
+  }
+  .answer-box textarea::placeholder{ color:var(--muted); }
+  .answer-box textarea:focus{ outline:none; }
+  .answer-saved{ font-size:.62rem; color:var(--good); opacity:0; transition:opacity .3s; }
+  .answer-saved.show{ opacity:1; }
+  .daily-note{ font-size:.66rem; color:var(--muted); margin-top:14px; line-height:1.6; }
 
   /* ---------- trivia ---------- */
   .trivia-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:26px; }
@@ -319,12 +371,12 @@
 </head>
 <body>
 
-<div class="ticker" aria-hidden="true"><span>DISPATCH FILED · BILATERAL RELATIONS BOG–NIN REMAIN STRONG · TARIFFS ON HUGS: ZERO · BORDER OPEN AT NAIROBI ARRIVALS · NEXT SUMMIT 4 AUGUST · &nbsp;</span></div>
+<div class="ticker" aria-hidden="true"><span>DISPATCH FILED · BILATERAL RELATIONS BOG–BRU REMAIN STRONG · TARIFFS ON HUGS: ZERO · BORDER OPEN AT NAIROBI ARRIVALS · NEXT SUMMIT 4 AUGUST · &nbsp;</span></div>
 
 <header class="top">
   <div class="wrap brandrow">
     <div class="brand">MJ <span style="color:var(--amber)">⇄</span> EW</div>
-    <div class="hub">BOG · NIN · NBO<br><span style="opacity:.7">04°42'N 074°04'W ⇄ 50°50'N 004°01'E ⇄ 01°17'S 036°49'E</span></div>
+    <div class="hub">BOG · BRU · NBO<br><span style="opacity:.7">04°42'N 074°04'W ⇄ 50°51'N 004°21'E ⇄ 01°17'S 036°49'E</span></div>
   </div>
 </header>
 
@@ -332,7 +384,7 @@
   <div class="wrap">
     <div class="eyebrow" id="statusPill">FIELD STATUS · TWO POSTS, ONE MISSION</div>
     <h1>Wheels down in <em id="targetCityWord">Nairobi</em></h1>
-    <p class="sub">Bogotá and Ninove, currently operating out of Nairobi and Belgium. One shared dispatch, counting down to the next summit.</p>
+    <p class="sub">Bogotá and Ghent, currently operating out of Nairobi and Brussels. One shared dispatch, counting down to the next summit.</p>
 
     <div class="board" id="board">
       <div class="unit"><div class="flap-group" data-unit="days"></div><label>DAYS</label></div>
@@ -365,13 +417,28 @@
         <div class="pass-body">
           <div class="pass-row1"><span class="pass-name">Ewald</span><span class="pass-code">EW · 001</span></div>
           <div class="pass-grid">
-            <div class="pass-field"><label>FROM</label><div>Ninove, BE</div></div>
-            <div class="pass-field"><label>CURRENTLY</label><div>Ninove, BE</div></div>
+            <div class="pass-field"><label>FROM</label><div>Ghent, BE</div></div>
+            <div class="pass-field"><label>CURRENTLY</label><div>Brussels, BE</div></div>
             <div class="pass-field"><label>NEXT MOVE</label><div>Poland · 18 Jul</div></div>
             <div class="pass-field"><label>MISSION START</label><div>2 Jun 2026</div></div>
           </div>
           <div class="pass-status" id="ewStatus">STATUS: EN ROUTE</div>
         </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="monthsary">
+  <div class="wrap">
+    <div class="monthsary-card" id="monthsaryCard">
+      <div>
+        <div class="monthsary-label">Monthsary</div>
+        <div class="monthsary-date" id="monthsaryDate">Loading…</div>
+      </div>
+      <div class="monthsary-count">
+        <div class="num" id="monthsaryNum">–</div>
+        <div class="unit" id="monthsaryUnit">days to go</div>
       </div>
     </div>
   </div>
@@ -459,10 +526,25 @@
     <div class="daily-card">
       <div class="daily-date" id="dailyDate"></div>
       <div class="daily-q" id="dailyQ">Loading today's question…</div>
-      <div class="confirm-row">
-        <button class="confirm-btn" id="confirmMJ">Maria Jose answered ✓</button>
-        <button class="confirm-btn" id="confirmEW">Ewald answered ✓</button>
+      <div class="answer-row">
+        <div class="answer-box">
+          <div class="answer-top">
+            <span class="answer-name">Maria Jose</span>
+            <span class="answer-saved" id="savedMJ">saved ✓</span>
+            <button class="answer-copy" id="copyMJ">Copy</button>
+          </div>
+          <textarea id="answerMJ" placeholder="Write your answer…"></textarea>
+        </div>
+        <div class="answer-box">
+          <div class="answer-top">
+            <span class="answer-name">Ewald</span>
+            <span class="answer-saved" id="savedEW">saved ✓</span>
+            <button class="answer-copy" id="copyEW">Copy</button>
+          </div>
+          <textarea id="answerEW" placeholder="Write your answer…"></textarea>
+        </div>
       </div>
+      <p class="daily-note">Each answer saves on your own device as you type. If you're on separate phones, hit "Copy" and paste your answer to each other — this page can't sync across devices on its own.</p>
     </div>
   </div>
 </section>
@@ -485,21 +567,41 @@
     <div class="guess-grid">
       <div class="guess-card" id="guessCard-ew">
         <div class="guess-title">Maria Jose guesses</div>
-        <div class="guess-sub">Which countries has Ewald been to?</div>
+        <div class="guess-sub">Which countries has Ewald been to? (he says 67 — how many can you name?)</div>
         <div id="guessBody-ew"></div>
       </div>
       <div class="guess-card" id="guessCard-mj">
         <div class="guess-title">Ewald guesses</div>
-        <div class="guess-sub">Which countries has Maria Jose been to?</div>
+        <div class="guess-sub">Which countries has Maria Jose been to? (she says 27 — how many can you name?)</div>
         <div id="guessBody-mj"></div>
       </div>
     </div>
   </div>
 </section>
 
+<section id="compatibility">
+  <div class="wrap">
+    <div class="section-head"><h2>Compatibility check</h2><span class="tag">SAME QUESTIONS, SEPARATE ANSWERS</span></div>
+    <div class="quiz-grid" id="quizGrid">
+      <div class="quiz-card" id="quizCard-mj">
+        <div class="quiz-title">Maria Jose</div>
+        <div class="quiz-sub">Answer honestly — no peeking at Ewald's card.</div>
+        <div id="quizBody-mj"></div>
+      </div>
+      <div class="quiz-card" id="quizCard-ew">
+        <div class="quiz-title">Ewald</div>
+        <div class="quiz-sub">Answer honestly — no peeking at Maria Jose's card.</div>
+        <div id="quizBody-ew"></div>
+      </div>
+    </div>
+    <div class="quiz-result-card" id="quizResult"></div>
+  </div>
+</section>
+
 <section id="worldmap-section">
   <div class="wrap">
     <div class="section-head"><h2>The map</h2><span class="tag">WHERE WE'VE BEEN, WHERE WE'D GO</span></div>
+    <p class="map-note" style="margin-top:0; margin-bottom:16px;">Passport count so far: <b style="color:var(--cream)">Ewald — 67 countries</b> · <b style="color:var(--cream)">Maria Jose — 27 countries</b>.</p>
     <div class="map-legend">
       <div class="legend-item"><span class="legend-dot" style="background:#cc9c3c"></span>Places we'd like to live</div>
       <div class="legend-item"><span class="legend-dot" style="background:#5b93a0"></span>Places we'd like to visit</div>
@@ -1005,6 +1107,36 @@ setInterval(updateCountdown, 1000);
   }
 })();
 
+/* ---------------- monthsary (22nd of every month) ---------------- */
+(function(){
+  const card = document.getElementById('monthsaryCard');
+  const dateEl = document.getElementById('monthsaryDate');
+  const numEl = document.getElementById('monthsaryNum');
+  const unitEl = document.getElementById('monthsaryUnit');
+
+  const now = new Date();
+  const todayIsThe22nd = now.getDate() === 22;
+
+  let next = new Date(now.getFullYear(), now.getMonth(), 22);
+  if(now.getDate() > 22){
+    next = new Date(now.getFullYear(), now.getMonth() + 1, 22);
+  }
+  const diffDays = Math.ceil((next - new Date(now.getFullYear(), now.getMonth(), now.getDate())) / 86400000);
+
+  const dateStr = next.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
+
+  if(todayIsThe22nd){
+    card.classList.add('today');
+    dateEl.innerHTML = "<b>Happy monthsary</b> — it's the 22nd";
+    numEl.textContent = '🎉';
+    unitEl.textContent = 'today';
+  } else {
+    dateEl.innerHTML = `Next one: <b>${dateStr}</b>`;
+    numEl.textContent = diffDays;
+    unitEl.textContent = diffDays === 1 ? 'day to go' : 'days to go';
+  }
+})();
+
 /* ---------------- boarding pass status ---------------- */
 (function(){
   const now = new Date();
@@ -1013,7 +1145,7 @@ setInterval(updateCountdown, 1000);
   const mjBack = new Date('2026-08-28');
 
   const ew = document.getElementById('ewStatus');
-  if(now < ewGoesPoland) ew.textContent = 'STATUS: IN BELGIUM';
+  if(now < ewGoesPoland) ew.textContent = 'STATUS: IN BRUSSELS';
   else if(now < REUNION) ew.textContent = 'STATUS: IN POLAND';
   else ew.textContent = 'STATUS: NAIROBI';
 
@@ -1053,30 +1185,51 @@ function dayOfYear(d){
 
   const dateKey = now.toISOString().slice(0,10);
   const storeKey = 'md_daily_' + dateKey;
-  let state = { mj:false, ew:false };
+  let state = { mj:'', ew:'' };
   try{
     const saved = localStorage.getItem(storeKey);
     if(saved) state = JSON.parse(saved);
   } catch(e){}
 
-  const mjBtn = document.getElementById('confirmMJ');
-  const ewBtn = document.getElementById('confirmEW');
-  if(state.mj) mjBtn.classList.add('on');
-  if(state.ew) ewBtn.classList.add('on');
-
   function save(){
     try{ localStorage.setItem(storeKey, JSON.stringify(state)); } catch(e){}
   }
-  mjBtn.addEventListener('click', ()=>{
-    mjBtn.classList.toggle('on');
-    state.mj = mjBtn.classList.contains('on');
-    save();
-  });
-  ewBtn.addEventListener('click', ()=>{
-    ewBtn.classList.toggle('on');
-    state.ew = ewBtn.classList.contains('on');
-    save();
-  });
+
+  function wireUp(personKey, textareaId, savedId, copyId){
+    const textarea = document.getElementById(textareaId);
+    const savedLabel = document.getElementById(savedId);
+    const copyBtn = document.getElementById(copyId);
+    textarea.value = state[personKey] || '';
+
+    let saveTimeout;
+    textarea.addEventListener('input', ()=>{
+      state[personKey] = textarea.value;
+      save();
+      savedLabel.classList.add('show');
+      clearTimeout(saveTimeout);
+      saveTimeout = setTimeout(()=> savedLabel.classList.remove('show'), 1500);
+    });
+
+    copyBtn.addEventListener('click', ()=>{
+      const text = textarea.value.trim();
+      if(!text) return;
+      const finish = ()=>{
+        copyBtn.textContent = 'Copied!';
+        copyBtn.classList.add('copied');
+        setTimeout(()=>{ copyBtn.textContent = 'Copy'; copyBtn.classList.remove('copied'); }, 1500);
+      };
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(finish).catch(finish);
+      } else {
+        textarea.select();
+        try{ document.execCommand('copy'); } catch(e){}
+        finish();
+      }
+    });
+  }
+
+  wireUp('mj', 'answerMJ', 'savedMJ', 'copyMJ');
+  wireUp('ew', 'answerEW', 'savedEW', 'copyEW');
 })();
 
 /* ---------------- date roulette ---------------- */
@@ -1214,15 +1367,20 @@ const TRIVIA = [
   { q:"Where does Maria Jose head to on 17 August?", opts:["Poland","Seoul","Cairo"], correct:1 },
   { q:"What's Maria Jose's home country?", opts:["Belgium","Colombia","Kenya"], correct:1 },
   { q:"What's Ewald's home country?", opts:["Belgium","Colombia","Poland"], correct:0 },
-  { q:"Where is Ewald currently based?", opts:["Ninove","Nairobi","Seoul"], correct:0 },
+  { q:"Where is Ewald currently based?", opts:["Brussels","Nairobi","Seoul"], correct:0 },
   { q:"When is Maria Jose back from Seoul?", opts:["4 August","28 August","2 June"], correct:1 },
-  { q:"What are the three hub codes at the top of the page?", opts:["BOG · NIN · NBO","BRU · BOG · NBO","COL · BEL · KEN"], correct:0 },
+  { q:"What are the three hub codes at the top of the page?", opts:["BOG · BRU · NBO","NIN · BOG · NBO","COL · BEL · KEN"], correct:0 },
   { q:"What's on the mission miles list for +50 XP?", opts:["A video call","Planned the reunion","A romantic gesture"], correct:1 },
   { q:"How many countries are on the world map's checklist?", opts:["50","100","175"], correct:2 },
   { q:"What's the very first item on the bucket list?", opts:["Long weekend safari","Mushroom trip outside Nairobi","Two-person book club"], correct:1 },
   { q:"What does the ticker say tariffs on hugs are?", opts:["Zero","10%","Under negotiation"], correct:0 },
   { q:"How many date ideas are on the roulette wheel?", opts:["6","10","14"], correct:1 },
-  { q:"What's the shared base for this whole mission?", opts:["Ninove","Bogotá","Nairobi"], correct:2 },
+  { q:"What's the shared base for this whole mission?", opts:["Ghent","Bogotá","Nairobi"], correct:2 },
+  { q:"How many countries has Ewald been to?", opts:["27","45","67"], correct:2 },
+  { q:"How many countries has Maria Jose been to?", opts:["27","67","15"], correct:0 },
+  { q:"What day of the month is the monthsary?", opts:["The 2nd","The 22nd","The 4th"], correct:1 },
+  { q:"Which UN agency does Ewald work for?", opts:["UNEP","UN-Habitat","UNDP"], correct:0 },
+  { q:"Where is Ewald originally from?", opts:["Brussels","Ninove","Ghent"], correct:2 },
 ];
 
 (function(){
@@ -1435,6 +1593,142 @@ function buildGuessGame(storageKey, containerId){
 buildGuessGame('md_guess_ew', 'guessBody-ew');
 buildGuessGame('md_guess_mj', 'guessBody-mj');
 
+/* ---------------- compatibility quiz ---------------- */
+const QUIZ_QUESTIONS = [
+  { q:"How do you recharge after a hard day?", opts:["Time alone","Talking it out","Physical activity","A distraction (show, game)"] },
+  { q:"What matters more in a home?", opts:["Location and access to adventure","Comfort and coziness","Space to think and work","Being close to family and friends"] },
+  { q:"How do you handle disagreements?", opts:["Address it immediately","Need space, then talk","Find a compromise fast","Avoid conflict when possible"] },
+  { q:"Your ideal Saturday?", opts:["Exploring somewhere new","A slow morning and a good book","Social plans with friends","Working on a personal project"] },
+  { q:"What matters more long-term?", opts:["Financial security","Meaningful work","Freedom and flexibility","Close relationships"] },
+  { q:"How do you show love?", opts:["Words","Acts of service","Quality time","Thoughtful gifts"] },
+  { q:"How do you make big decisions?", opts:["Gut feeling","Research everything first","Talk it through with your partner","List the pros and cons"] },
+  { q:"Your risk tolerance?", opts:["Love a leap","Calculated risks only","Prefer stability","Depends on the day"] },
+  { q:"What kind of trip sounds best right now?", opts:["Off-grid and remote","City with great food and museums","Somewhere with a beach and nothing to do","Somewhere with strong political history"] },
+  { q:"What's a good pace for a relationship's big decisions (moving, marriage, kids)?", opts:["Sooner rather than later","Whenever it feels right, no timeline","Carefully planned out","Let life decide"] },
+];
+
+function buildQuizTaker(personKey, containerId, otherKey){
+  const container = document.getElementById(containerId);
+  const KEY = 'md_quiz_' + personKey;
+
+  let answers = null;
+  try{ answers = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
+
+  if(answers){
+    container.innerHTML = '';
+    const done = document.createElement('div');
+    done.className = 'quiz-done';
+    done.textContent = '✓ Answers locked in';
+    container.appendChild(done);
+    const resetBtn = document.createElement('button');
+    resetBtn.className = 'guess-reset';
+    resetBtn.style.marginTop = '10px';
+    resetBtn.textContent = 'Retake quiz';
+    resetBtn.addEventListener('click', ()=>{
+      localStorage.removeItem(KEY);
+      buildQuizTaker(personKey, containerId, otherKey);
+      renderQuizResult();
+    });
+    container.appendChild(resetBtn);
+    return;
+  }
+
+  container.innerHTML = '';
+  const picks = new Array(QUIZ_QUESTIONS.length).fill(null);
+
+  QUIZ_QUESTIONS.forEach((item, qi)=>{
+    const block = document.createElement('div');
+    block.className = 'quiz-q';
+    const qText = document.createElement('div');
+    qText.className = 'quiz-q-text';
+    qText.textContent = (qi+1) + '. ' + item.q;
+    block.appendChild(qText);
+    item.opts.forEach((opt, oi)=>{
+      const label = document.createElement('label');
+      label.className = 'quiz-opt';
+      const radio = document.createElement('input');
+      radio.type = 'radio';
+      radio.name = personKey + '-q' + qi;
+      radio.addEventListener('change', ()=>{ picks[qi] = oi; });
+      const span = document.createElement('span');
+      span.textContent = opt;
+      label.appendChild(radio);
+      label.appendChild(span);
+      block.appendChild(label);
+    });
+    container.appendChild(block);
+  });
+
+  const submitBtn = document.createElement('button');
+  submitBtn.className = 'quiz-submit';
+  submitBtn.textContent = 'Lock in my answers';
+  submitBtn.addEventListener('click', ()=>{
+    if(picks.some(p => p === null)){
+      submitBtn.textContent = 'Answer everything first';
+      setTimeout(()=> submitBtn.textContent = 'Lock in my answers', 1500);
+      return;
+    }
+    try{ localStorage.setItem(KEY, JSON.stringify(picks)); } catch(e){}
+    buildQuizTaker(personKey, containerId, otherKey);
+    renderQuizResult();
+  });
+  container.appendChild(submitBtn);
+}
+
+function renderQuizResult(){
+  const resultEl = document.getElementById('quizResult');
+  let mj = null, ew = null;
+  try{ mj = JSON.parse(localStorage.getItem('md_quiz_mj') || 'null'); } catch(e){}
+  try{ ew = JSON.parse(localStorage.getItem('md_quiz_ew') || 'null'); } catch(e){}
+
+  resultEl.innerHTML = '';
+  if(!mj || !ew){
+    const waiting = document.createElement('div');
+    waiting.className = 'quiz-waiting';
+    waiting.textContent = 'Once both of you have locked in your answers (on this device), your compatibility score shows up here.';
+    resultEl.appendChild(waiting);
+    return;
+  }
+
+  let matches = 0;
+  const rows = QUIZ_QUESTIONS.map((item, qi)=>{
+    const isMatch = mj[qi] === ew[qi];
+    if(isMatch) matches++;
+    return { q:item.q, isMatch, mjAns: item.opts[mj[qi]], ewAns: item.opts[ew[qi]] };
+  });
+  const pct = Math.round((matches / QUIZ_QUESTIONS.length) * 100);
+
+  const score = document.createElement('div');
+  score.className = 'quiz-score';
+  score.textContent = pct + '%';
+  resultEl.appendChild(score);
+
+  const label = document.createElement('div');
+  label.className = 'quiz-score-label';
+  label.textContent = `COMPATIBILITY · ${matches} of ${QUIZ_QUESTIONS.length} matched`;
+  resultEl.appendChild(label);
+
+  const breakdown = document.createElement('div');
+  breakdown.className = 'quiz-breakdown';
+  rows.forEach(r=>{
+    const row = document.createElement('div');
+    row.className = 'quiz-breakdown-row';
+    const q = document.createElement('span');
+    q.textContent = r.q;
+    const ans = document.createElement('span');
+    ans.className = r.isMatch ? 'm' : 'x';
+    ans.textContent = r.isMatch ? '✓ ' + r.mjAns : `MJ: ${r.mjAns} / EW: ${r.ewAns}`;
+    row.appendChild(q);
+    row.appendChild(ans);
+    breakdown.appendChild(row);
+  });
+  resultEl.appendChild(breakdown);
+}
+
+buildQuizTaker('mj', 'quizBody-mj', 'ew');
+buildQuizTaker('ew', 'quizBody-ew', 'mj');
+renderQuizResult();
+
 /* ---------------- bucket list ---------------- */
 (function(){
   const KEY = 'md_bucketlist';
@@ -1532,7 +1826,7 @@ const MAP_VISIT = [
 ];
 const MAP_BEEN_EW = [
   { name:"Cairo (placeholder)", lat:30.04, lon:31.24 },
-  { name:"Ninove (placeholder)", lat:50.83, lon:4.02 },
+  { name:"Ghent (placeholder)", lat:51.05, lon:3.72 },
   { name:"Warsaw (placeholder)", lat:52.23, lon:21.01 },
 ];
 const MAP_BEEN_MJ = [
