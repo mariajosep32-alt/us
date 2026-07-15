@@ -296,6 +296,21 @@
   .map-pin text{ font-family:'JetBrains Mono',monospace; font-size:7.8px; fill:var(--cream); opacity:0; transition:opacity .15s; pointer-events:none; }
   .map-pin:hover text{ opacity:1; }
   .map-note{ margin-top:14px; font-size:.7rem; color:var(--muted); line-height:1.6; }
+  .map-add-row{ display:flex; gap:10px; flex-wrap:wrap; }
+  .map-add-select{
+    background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    color:var(--cream); font-family:'JetBrains Mono',monospace; font-size:.8rem;
+  }
+  .map-add-row input{
+    flex:1; min-width:160px; background:var(--panel-2); border:1px solid var(--line); border-radius:8px; padding:10px 12px;
+    color:var(--cream); font-family:'JetBrains Mono',monospace; font-size:.82rem;
+  }
+  .map-add-row input::placeholder{ color:var(--muted); }
+  .map-add-row button{
+    background:var(--amber); color:#1a1204; border:none; border-radius:8px; padding:0 18px; font-weight:700;
+    font-family:'JetBrains Mono',monospace; font-size:.8rem; cursor:pointer;
+  }
+  .map-add-status{ font-size:.68rem; color:var(--muted); margin-top:8px; min-height:14px; }
 
 
 
@@ -303,8 +318,9 @@
   .xp-top{ display:flex; justify-content:space-between; align-items:baseline; margin-bottom:10px; }
   .xp-total{ font-family:'Fraunces',serif; font-size:1.4rem; color:var(--amber); }
   .xp-goal{ font-size:.72rem; color:var(--muted); }
-  .xp-bar{ height:10px; background:var(--panel-2); border-radius:99px; overflow:hidden; margin-bottom:22px; }
+  .xp-bar{ height:10px; background:var(--panel-2); border-radius:99px; overflow:hidden; margin-bottom:10px; }
   .xp-bar-fill{ height:100%; width:0%; background:linear-gradient(90deg,var(--sky),var(--amber)); transition:width .5s ease; }
+  .xp-breakdown{ font-size:.66rem; color:var(--muted); letter-spacing:.04em; margin-bottom:22px; }
   .xp-actions{ display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
   @media (max-width:640px){ .xp-actions{ grid-template-columns:1fr 1fr; } }
   .xp-subhead{ font-size:.68rem; letter-spacing:.14em; color:var(--muted); margin:4px 0 10px; text-transform:uppercase; }
@@ -348,13 +364,15 @@
   }
   .answer-box textarea::placeholder{ color:var(--muted); }
   .answer-box textarea:focus{ outline:none; }
+  .answer-box textarea.answer-readonly{ opacity:.7; cursor:default; }
   .answer-saved{ font-size:.62rem; color:var(--good); opacity:0; transition:opacity .3s; }
   .answer-saved.show{ opacity:1; }
   .daily-note{ font-size:.66rem; color:var(--muted); margin-top:14px; line-height:1.6; }
 
   /* ---------- trivia ---------- */
   .trivia-card{ background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:26px; }
-  .trivia-top{ display:flex; justify-content:space-between; margin-bottom:16px; font-size:.72rem; color:var(--muted); }
+  .trivia-top{ display:flex; justify-content:space-between; margin-bottom:6px; font-size:.72rem; color:var(--muted); }
+  .trivia-compare{ font-size:.66rem; color:var(--muted); margin-bottom:16px; }
   .trivia-q{ font-family:'Fraunces',serif; font-size:1.15rem; margin-bottom:16px; color:var(--cream); }
   .trivia-opts{ display:grid; gap:10px; }
   .trivia-opt{
@@ -367,9 +385,43 @@
 
   footer{ text-align:center; padding:40px 24px 60px; color:var(--muted); font-size:.72rem; letter-spacing:.04em; }
   footer .heart{ color:var(--amber); }
+  .switch-person{ margin-top:10px; }
+  .switch-person-btn{ background:none; border:none; color:var(--muted); font-size:.68rem; letter-spacing:.04em; text-decoration:underline; cursor:pointer; font-family:'JetBrains Mono',monospace; }
+  .switch-person-btn:hover{ color:var(--sky); }
+
+  /* ---------- identity modal ---------- */
+  .identity-modal{
+    position:fixed; inset:0; z-index:100; background:rgba(6,12,9,0.88);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+  }
+  .identity-modal[hidden]{ display:none; }
+  .identity-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:32px 28px;
+    max-width:380px; width:100%; text-align:center;
+  }
+  .identity-title{ font-family:'Fraunces',serif; font-size:1.3rem; color:var(--cream); margin-bottom:10px; }
+  .identity-sub{ font-size:.78rem; color:var(--muted); line-height:1.6; margin-bottom:24px; }
+  .identity-btns{ display:flex; flex-direction:column; gap:12px; }
+  .identity-btn{
+    background:var(--panel-2); border:1px solid var(--line); color:var(--cream); border-radius:10px;
+    padding:14px; font-family:'JetBrains Mono',monospace; font-size:.88rem; font-weight:600; cursor:pointer;
+    transition:border-color .15s;
+  }
+  .identity-btn:hover{ border-color:var(--amber); }
 </style>
 </head>
 <body>
+
+<div class="identity-modal" id="identityModal" hidden>
+  <div class="identity-card">
+    <div class="identity-title">Who's checking in?</div>
+    <div class="identity-sub">This tags what you type as yours so it syncs to the right place. Tap your name once — this device will remember it (you can switch later from the footer).</div>
+    <div class="identity-btns">
+      <button class="identity-btn" data-person="mj">I'm Maria Jose</button>
+      <button class="identity-btn" data-person="ew">I'm Ewald</button>
+    </div>
+  </div>
+</div>
 
 <div class="ticker" aria-hidden="true"><span>DISPATCH FILED · BILATERAL RELATIONS BOG–BRU REMAIN STRONG · TARIFFS ON HUGS: ZERO · BORDER OPEN AT NAIROBI ARRIVALS · NEXT SUMMIT 4 AUGUST · &nbsp;</span></div>
 
@@ -479,6 +531,7 @@
     <div class="xp-card">
       <div class="xp-top"><span class="xp-total"><span id="xpVal">0</span> XP</span><span class="xp-goal">goal: 700 XP</span></div>
       <div class="xp-bar"><div class="xp-bar-fill" id="xpFill"></div></div>
+      <div class="xp-breakdown" id="xpBreakdown"></div>
 
       <div class="xp-subhead">Everyday connection</div>
       <div class="xp-actions">
@@ -544,7 +597,7 @@
           <textarea id="answerEW" placeholder="Write your answer…"></textarea>
         </div>
       </div>
-      <p class="daily-note">Each answer saves on your own device as you type. If you're on separate phones, hit "Copy" and paste your answer to each other — this page can't sync across devices on its own.</p>
+      <p class="daily-note">Answers sync automatically — whatever you write shows up on the other person's device within a second or two. You can only edit your own box; "Copy" still works if you want to paste your answer somewhere else.</p>
     </div>
   </div>
 </section>
@@ -554,6 +607,7 @@
     <div class="section-head"><h2>Layover trivia</h2><span class="tag">HOW WELL DO YOU KNOW THE MISSION</span></div>
     <div class="trivia-card">
       <div class="trivia-top"><span id="triviaScore">Score: 0/0</span><span id="triviaProgress"></span></div>
+      <div class="trivia-compare" id="triviaCompare"></div>
       <div class="trivia-q" id="triviaQ"></div>
       <div class="trivia-opts" id="triviaOpts"></div>
       <button class="trivia-next" id="triviaNext">Next question →</button>
@@ -1002,16 +1056,67 @@
 </g>
 </svg>
     </div>
-    <p class="map-note" id="mapNote">These are placeholder pins so you can see how it works — swap in your real picks (place name + who proposed it) and I'll finalize the coordinates.</p>
+    <div class="bucket-card" style="margin-top:20px;">
+      <div class="map-add-row">
+        <select id="mapPlaceCategory" class="map-add-select">
+          <option value="live">🏡 Somewhere we'd like to live</option>
+          <option value="visit">🧭 Somewhere we'd like to visit</option>
+        </select>
+        <input type="text" id="mapPlaceInput" placeholder="City or place name…">
+        <button id="mapPlaceAddBtn">Add</button>
+      </div>
+      <div class="map-add-status" id="mapAddStatus"></div>
+      <ul class="bucket-list" id="mapPlaceList"></ul>
+    </div>
+    <p class="map-note" id="mapNote">"Been" pins fill in automatically as guesses get confirmed in Guess the passport above. Add your own live/visit picks here — they show up for both of you.</p>
     <p class="map-attrib">Base map: Al MacDonald / Fritz Lekschas, CC BY-SA 3.0</p>
   </div>
 </section>
 
 <footer>
   Built for MJ &amp; Ewald · Nairobi ⇄ everywhere · reunion 4 August 2026 <span class="heart">❤</span>
+  <div class="switch-person"><button class="switch-person-btn" id="switchPersonBtn">Not you? Switch person</button></div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
+/* ---------------- identity + shared sync client ---------------- */
+const PERSON_KEY = 'md_person';
+function getPerson(){ return localStorage.getItem(PERSON_KEY); }
+function personLabel(p){ return p === 'mj' ? 'Maria Jose' : p === 'ew' ? 'Ewald' : ''; }
+
+const sb = window.supabase.createClient(
+  'https://rquuxccwdodkkfeijuwz.supabase.co',
+  'sb_publishable_IDDccj6U2TLaPrQSicF5Lw_Fnw3Ve_e'
+);
+
+// Fire a write, and if it fails (offline etc.), quietly retry once the
+// connection comes back. The caller's own localStorage save (done first,
+// separately) is what keeps the data safe in the meantime.
+function syncWrite(promiseFn){
+  promiseFn().catch(()=>{
+    const retry = ()=> promiseFn().catch(()=>{});
+    window.addEventListener('online', retry, { once:true });
+  });
+}
+
+(function(){
+  const modal = document.getElementById('identityModal');
+  function show(){ modal.hidden = false; }
+  function hide(){ modal.hidden = true; }
+
+  if(!getPerson()) show();
+
+  modal.querySelectorAll('.identity-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      localStorage.setItem(PERSON_KEY, btn.dataset.person);
+      location.reload();
+    });
+  });
+
+  document.getElementById('switchPersonBtn').addEventListener('click', show);
+})();
+
 /* ---------------- config ---------------- */
 const REUNION = new Date('2026-08-04T00:00:00');
 const SEP_START = new Date('2026-06-02T00:00:00');
@@ -1185,30 +1290,98 @@ function dayOfYear(d){
 
   const dateKey = now.toISOString().slice(0,10);
   const storeKey = 'md_daily_' + dateKey;
-  let state = { mj:'', ew:'' };
+  const me = getPerson();
+
+  let state = { mj:'', ew:'', mjDirty:false, ewDirty:false };
   try{
-    const saved = localStorage.getItem(storeKey);
-    if(saved) state = JSON.parse(saved);
+    const saved = JSON.parse(localStorage.getItem(storeKey) || 'null');
+    if(saved) state = Object.assign(state, saved);
   } catch(e){}
 
-  function save(){
+  function saveLocal(){
     try{ localStorage.setItem(storeKey, JSON.stringify(state)); } catch(e){}
   }
+
+  const boxes = { mj: document.getElementById('answerMJ'), ew: document.getElementById('answerEW') };
+  function renderBox(personKey){
+    const ta = boxes[personKey];
+    if(document.activeElement !== ta) ta.value = state[personKey] || '';
+  }
+  renderBox('mj'); renderBox('ew');
+
+  function pushToServer(personKey){
+    sb.from('daily_answers').upsert({
+      date: dateKey,
+      [personKey + '_answer']: state[personKey],
+      [personKey + '_updated_at']: new Date().toISOString()
+    }, { onConflict:'date' }).then(({ error })=>{
+      if(error){
+        window.addEventListener('online', ()=> pushToServer(personKey), { once:true });
+        return;
+      }
+      state[personKey + 'Dirty'] = false;
+      saveLocal();
+    });
+  }
+
+  // Pull today's shared row. Unsynced local edits (from before a dropped
+  // connection) win over whatever's on the server until they've gone through.
+  sb.from('daily_answers').select('*').eq('date', dateKey).maybeSingle().then(({ data })=>{
+    ['mj','ew'].forEach(personKey=>{
+      if(state[personKey + 'Dirty']){ pushToServer(personKey); return; }
+      const remoteVal = data ? data[personKey + '_answer'] : '';
+      if(remoteVal){
+        state[personKey] = remoteVal;
+        saveLocal();
+        renderBox(personKey);
+      } else if(state[personKey]){
+        pushToServer(personKey); // pre-sync local answer the server doesn't have yet
+      }
+    });
+  });
+
+  // Live updates from the other device — never overwrites your own box.
+  sb.channel('daily-' + dateKey)
+    .on('postgres_changes', { event:'*', schema:'public', table:'daily_answers', filter:'date=eq.' + dateKey }, (payload)=>{
+      const row = payload.new;
+      if(!row) return;
+      const other = me === 'mj' ? 'ew' : 'mj';
+      if(row[other + '_answer'] !== undefined && !state[other + 'Dirty']){
+        state[other] = row[other + '_answer'];
+        saveLocal();
+        renderBox(other);
+      }
+    })
+    .subscribe();
 
   function wireUp(personKey, textareaId, savedId, copyId){
     const textarea = document.getElementById(textareaId);
     const savedLabel = document.getElementById(savedId);
     const copyBtn = document.getElementById(copyId);
-    textarea.value = state[personKey] || '';
+    const mine = personKey === me;
+
+    textarea.readOnly = !mine;
+    if(mine){
+      textarea.placeholder = 'Write your answer…';
+    } else {
+      textarea.classList.add('answer-readonly');
+      textarea.placeholder = personLabel(personKey) + "'s answer will appear here once they write it…";
+    }
 
     let saveTimeout;
-    textarea.addEventListener('input', ()=>{
-      state[personKey] = textarea.value;
-      save();
-      savedLabel.classList.add('show');
-      clearTimeout(saveTimeout);
-      saveTimeout = setTimeout(()=> savedLabel.classList.remove('show'), 1500);
-    });
+    if(mine){
+      textarea.addEventListener('input', ()=>{
+        state[personKey] = textarea.value;
+        state[personKey + 'Dirty'] = true;
+        saveLocal();
+        savedLabel.classList.add('show');
+        clearTimeout(saveTimeout);
+        saveTimeout = setTimeout(()=>{
+          savedLabel.classList.remove('show');
+          pushToServer(personKey);
+        }, 600);
+      });
+    }
 
     copyBtn.addEventListener('click', ()=>{
       const text = textarea.value.trim();
@@ -1316,30 +1489,82 @@ const DATE_IDEAS = [
 
 /* ---------------- XP dashboard ---------------- */
 (function(){
-  const XP_KEY = 'md_xp';
   const GOAL = 700;
-  let xp = 0;
-  try{
-    const saved = localStorage.getItem(XP_KEY);
-    if(saved !== null) xp = Math.min(GOAL, Number(saved) || 0);
-  } catch(e){}
+  const QUEUE_KEY = 'md_xp_pending';
+  const LEGACY_KEY = 'md_xp';
+  const me = getPerson();
+
+  let total = 0;
+  let byPerson = { mj:0, ew:0 };
 
   const xpVal = document.getElementById('xpVal');
   const xpFill = document.getElementById('xpFill');
   const xpComplete = document.getElementById('xpComplete');
+  const xpBreakdown = document.getElementById('xpBreakdown');
 
   function render(){
-    xpVal.textContent = xp;
-    xpFill.style.width = (xp / GOAL * 100) + '%';
-    if(xp >= GOAL) xpComplete.style.display = 'block';
+    const shown = Math.min(total, GOAL);
+    xpVal.textContent = shown;
+    xpFill.style.width = (shown / GOAL * 100) + '%';
+    if(total >= GOAL) xpComplete.style.display = 'block';
+    xpBreakdown.textContent = `Maria Jose: ${byPerson.mj || 0} · Ewald: ${byPerson.ew || 0}`;
   }
-  render();
+
+  function getQueue(){
+    try{ return JSON.parse(localStorage.getItem(QUEUE_KEY) || '[]'); } catch(e){ return []; }
+  }
+  function setQueue(q){
+    try{ localStorage.setItem(QUEUE_KEY, JSON.stringify(q)); } catch(e){}
+  }
+  function flushQueue(){
+    const queue = getQueue();
+    if(!queue.length) return;
+    sb.from('xp_events').insert(queue).then(({ error })=>{
+      if(!error) setQueue([]);
+      else window.addEventListener('online', flushQueue, { once:true });
+    });
+  }
+  function logAction(points, label){
+    const queue = getQueue();
+    queue.push({ person: me, label, points });
+    setQueue(queue);
+    flushQueue();
+  }
+
+  // One-time import: a pre-sync device may have its own locally-earned total
+  // that was never shared. Fold it in as a single starting event, then retire the old key.
+  try{
+    const legacy = localStorage.getItem(LEGACY_KEY);
+    if(legacy !== null && Number(legacy) > 0){
+      logAction(Number(legacy), 'Imported starting total');
+    }
+    localStorage.removeItem(LEGACY_KEY);
+  } catch(e){}
+
+  sb.from('xp_events').select('person, points').then(({ data })=>{
+    if(data){
+      total = 0; byPerson = { mj:0, ew:0 };
+      data.forEach(row=>{ total += row.points; byPerson[row.person] = (byPerson[row.person]||0) + row.points; });
+      render();
+    }
+    flushQueue();
+  });
+
+  sb.channel('xp-events')
+    .on('postgres_changes', { event:'INSERT', schema:'public', table:'xp_events' }, (payload)=>{
+      const row = payload.new;
+      total += row.points;
+      byPerson[row.person] = (byPerson[row.person]||0) + row.points;
+      render();
+    })
+    .subscribe();
 
   document.querySelectorAll('.xp-btn').forEach(btn=>{
+    const isPrivate = btn.closest('#xpPrivateActions') !== null;
     btn.addEventListener('click', ()=>{
-      xp = Math.min(GOAL, xp + Number(btn.dataset.xp));
-      try{ localStorage.setItem(XP_KEY, String(xp)); } catch(e){}
-      render();
+      const points = Number(btn.dataset.xp);
+      const label = isPrivate ? 'Private' : btn.childNodes[0].textContent.trim();
+      logAction(points, label);
     });
   });
 
@@ -1384,10 +1609,14 @@ const TRIVIA = [
 ];
 
 (function(){
-  const TRIVIA_KEY = 'md_trivia';
+  const me = getPerson();
+  const other = me === 'mj' ? 'ew' : 'mj';
+  const MIRROR_KEY = 'md_trivia_' + me + '_mirror';
+  const LEGACY_KEY = 'md_trivia';
+
   let i = 0, score = 0, answered = 0;
   try{
-    const saved = JSON.parse(localStorage.getItem(TRIVIA_KEY) || 'null');
+    const saved = JSON.parse(localStorage.getItem(MIRROR_KEY) || 'null');
     if(saved){
       i = Math.min(TRIVIA.length - 1, saved.i || 0);
       score = saved.score || 0;
@@ -1395,14 +1624,33 @@ const TRIVIA = [
     }
   } catch(e){}
 
+  let otherProgress = { score:0, answered:0 };
+
   const qEl = document.getElementById('triviaQ');
   const optsEl = document.getElementById('triviaOpts');
   const scoreEl = document.getElementById('triviaScore');
   const progEl = document.getElementById('triviaProgress');
   const nextBtn = document.getElementById('triviaNext');
+  const compareEl = document.getElementById('triviaCompare');
 
-  function persist(){
-    try{ localStorage.setItem(TRIVIA_KEY, JSON.stringify({ i, score, answered })); } catch(e){}
+  function mirror(){
+    try{ localStorage.setItem(MIRROR_KEY, JSON.stringify({ i, score, answered })); } catch(e){}
+  }
+
+  function pushState(){
+    mirror();
+    const trySync = ()=> sb.from('trivia_progress').update({
+      current_index: i, score, answered, updated_at: new Date().toISOString()
+    }).eq('person', me).then(({ error })=>{
+      if(error) window.addEventListener('online', trySync, { once:true });
+    });
+    trySync();
+  }
+
+  function renderCompare(){
+    compareEl.textContent = otherProgress.answered > 0
+      ? `${personLabel(other)}: ${otherProgress.score}/${otherProgress.answered} so far`
+      : '';
   }
 
   function render(){
@@ -1427,7 +1675,7 @@ const TRIVIA = [
         }
         answered++;
         scoreEl.textContent = `Score: ${score}/${answered}`;
-        persist();
+        pushState();
         if(i < TRIVIA.length - 1) nextBtn.style.display = 'inline-block';
       });
       optsEl.appendChild(b);
@@ -1435,25 +1683,100 @@ const TRIVIA = [
   }
   nextBtn.addEventListener('click', ()=>{
     i = Math.min(TRIVIA.length - 1, i + 1);
-    persist();
+    pushState();
     render();
   });
   scoreEl.textContent = `Score: ${score}/${answered}`;
   render();
+  renderCompare();
+
+  // Pull my own progress (so it carries over if I open this on a new device),
+  // importing pre-sync local progress the first time if the server has none yet.
+  sb.from('trivia_progress').select('*').eq('person', me).maybeSingle().then(({ data })=>{
+    if(data && data.answered > 0){
+      i = Math.min(TRIVIA.length - 1, data.current_index || 0);
+      score = data.score || 0;
+      answered = data.answered || 0;
+      mirror();
+      scoreEl.textContent = `Score: ${score}/${answered}`;
+      render();
+      return;
+    }
+    let legacy = null;
+    try{ legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || 'null'); } catch(e){}
+    if(legacy && legacy.answered){
+      i = Math.min(TRIVIA.length - 1, legacy.i || 0);
+      score = legacy.score || 0;
+      answered = legacy.answered || 0;
+      mirror();
+      pushState();
+      scoreEl.textContent = `Score: ${score}/${answered}`;
+      render();
+    }
+  });
+
+  sb.from('trivia_progress').select('*').eq('person', other).maybeSingle().then(({ data })=>{
+    if(data){ otherProgress = { score: data.score || 0, answered: data.answered || 0 }; renderCompare(); }
+  });
+
+  sb.channel('trivia-' + other)
+    .on('postgres_changes', { event:'*', schema:'public', table:'trivia_progress', filter:'person=eq.' + other }, (payload)=>{
+      const row = payload.new;
+      if(!row) return;
+      otherProgress = { score: row.score || 0, answered: row.answered || 0 };
+      renderCompare();
+    })
+    .subscribe();
 })();
 /* ---------------- guess the passport ---------------- */
-function buildGuessGame(storageKey, containerId){
+const GUESSER_OF = { ew:'mj', mj:'ew' }; // subject 'ew' = guesses about Ewald, made by 'mj' (and vice versa)
+
+function buildGuessGame(subject, containerId){
   const container = document.getElementById(containerId);
-  const KEY = storageKey;
+  const MIRROR_KEY = 'md_guess_' + subject + '_mirror';
+  const LEGACY_KEY = 'md_guess_' + subject;
+  const me = getPerson();
+  const guesser = GUESSER_OF[subject];
 
   let state = { locked: false, guesses: [], confirmations: {} };
   try{
-    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
+    const saved = JSON.parse(localStorage.getItem(MIRROR_KEY) || 'null');
     if(saved) state = saved;
   } catch(e){}
 
-  function persist(){
-    try{ localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){}
+  function mirror(){
+    try{ localStorage.setItem(MIRROR_KEY, JSON.stringify(state)); } catch(e){}
+  }
+
+  function pushState(){
+    mirror();
+    const trySync = ()=>{
+      sb.from('guess_game').update({
+        locked: state.locked,
+        guesses: state.guesses,
+        confirmations: state.confirmations,
+        updated_at: new Date().toISOString()
+      }).eq('subject', subject).then(({ error })=>{
+        if(error) window.addEventListener('online', trySync, { once:true });
+      });
+    };
+    trySync();
+  }
+
+  function addBeenPin(code){
+    const country = COUNTRIES.find(c => c.code === code);
+    if(!country) return;
+    sb.from('map_been_pins')
+      .upsert({ subject, country_code: code, country_name: country.name }, { onConflict:'subject,country_code' })
+      .then(()=>{});
+  }
+
+  function renderWaiting(text){
+    container.innerHTML = '';
+    const hint = document.createElement('div');
+    hint.className = 'guess-sub';
+    hint.textContent = text;
+    container.appendChild(hint);
   }
 
   function renderPicker(){
@@ -1511,14 +1834,15 @@ function buildGuessGame(storageKey, containerId){
       state.locked = true;
       state.confirmations = {};
       state.guesses.forEach(code => state.confirmations[code] = null);
-      persist();
-      renderResults();
+      pushState();
+      render();
     });
     container.appendChild(lockBtn);
   }
 
   function renderResults(){
     container.innerHTML = '';
+    const canConfirm = me === subject;
 
     const confirmedCount = Object.values(state.confirmations).filter(v => v !== null).length;
     const correctCount = Object.values(state.confirmations).filter(v => v === true).length;
@@ -1533,7 +1857,7 @@ function buildGuessGame(storageKey, containerId){
       const hint = document.createElement('div');
       hint.className = 'guess-sub';
       hint.style.marginBottom = '10px';
-      hint.textContent = 'Whoever this guess is about: confirm each one below.';
+      hint.textContent = canConfirm ? 'Confirm each guess below.' : `Waiting for ${personLabel(subject)} to confirm these.`;
       container.appendChild(hint);
     }
 
@@ -1551,47 +1875,96 @@ function buildGuessGame(storageKey, containerId){
         label.textContent = c.name;
         row.appendChild(label);
 
-        const btns = document.createElement('div');
-        btns.className = 'guess-confirm-btns';
-        const yesBtn = document.createElement('button');
-        yesBtn.textContent = '✓ Correct';
-        if(val === true) yesBtn.classList.add('active-correct');
-        yesBtn.addEventListener('click', ()=>{
-          state.confirmations[c.code] = true;
-          persist();
-          renderResults();
-        });
-        const noBtn = document.createElement('button');
-        noBtn.textContent = '✗ Wrong';
-        if(val === false) noBtn.classList.add('active-wrong');
-        noBtn.addEventListener('click', ()=>{
-          state.confirmations[c.code] = false;
-          persist();
-          renderResults();
-        });
-        btns.appendChild(yesBtn);
-        btns.appendChild(noBtn);
-        row.appendChild(btns);
+        if(canConfirm){
+          const btns = document.createElement('div');
+          btns.className = 'guess-confirm-btns';
+          const yesBtn = document.createElement('button');
+          yesBtn.textContent = '✓ Correct';
+          if(val === true) yesBtn.classList.add('active-correct');
+          yesBtn.addEventListener('click', ()=>{
+            state.confirmations[c.code] = true;
+            pushState();
+            addBeenPin(c.code);
+            render();
+          });
+          const noBtn = document.createElement('button');
+          noBtn.textContent = '✗ Wrong';
+          if(val === false) noBtn.classList.add('active-wrong');
+          noBtn.addEventListener('click', ()=>{
+            state.confirmations[c.code] = false;
+            pushState();
+            render();
+          });
+          btns.appendChild(yesBtn);
+          btns.appendChild(noBtn);
+          row.appendChild(btns);
+        } else if(val !== null){
+          const tag = document.createElement('span');
+          tag.className = 'guess-sub';
+          tag.textContent = val ? '✓' : '✗';
+          row.appendChild(tag);
+        }
         results.appendChild(row);
       });
     container.appendChild(results);
 
-    const resetBtn = document.createElement('button');
-    resetBtn.className = 'guess-reset';
-    resetBtn.textContent = 'Start over';
-    resetBtn.addEventListener('click', ()=>{
-      state = { locked: false, guesses: [], confirmations: {} };
-      persist();
-      renderPicker();
-    });
-    container.appendChild(resetBtn);
+    if(me === guesser){
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'guess-reset';
+      resetBtn.textContent = 'Start over';
+      resetBtn.addEventListener('click', ()=>{
+        state = { locked: false, guesses: [], confirmations: {} };
+        pushState();
+        render();
+      });
+      container.appendChild(resetBtn);
+    }
   }
 
-  if(state.locked){ renderResults(); } else { renderPicker(); }
+  function render(){
+    if(state.locked){
+      renderResults();
+    } else if(me === guesser){
+      renderPicker();
+    } else {
+      renderWaiting(`Waiting for ${personLabel(guesser)} to lock in their guesses about you…`);
+    }
+  }
+
+  render();
+
+  sb.from('guess_game').select('*').eq('subject', subject).maybeSingle().then(({ data })=>{
+    if(!data) return;
+    const remoteUntouched = !data.locked && (!data.guesses || data.guesses.length === 0);
+    if(remoteUntouched){
+      let legacy = null;
+      try{ legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || 'null'); } catch(e){}
+      if(legacy && legacy.locked){
+        state = legacy;
+        mirror();
+        pushState();
+        render();
+        return;
+      }
+    }
+    state = { locked: data.locked, guesses: data.guesses || [], confirmations: data.confirmations || {} };
+    mirror();
+    render();
+  });
+
+  sb.channel('guess-' + subject)
+    .on('postgres_changes', { event:'*', schema:'public', table:'guess_game', filter:'subject=eq.' + subject }, (payload)=>{
+      const row = payload.new;
+      if(!row) return;
+      state = { locked: row.locked, guesses: row.guesses || [], confirmations: row.confirmations || {} };
+      mirror();
+      render();
+    })
+    .subscribe();
 }
 
-buildGuessGame('md_guess_ew', 'guessBody-ew');
-buildGuessGame('md_guess_mj', 'guessBody-mj');
+buildGuessGame('ew', 'guessBody-ew');
+buildGuessGame('mj', 'guessBody-mj');
 
 /* ---------------- compatibility quiz ---------------- */
 const QUIZ_QUESTIONS = [
@@ -1607,131 +1980,206 @@ const QUIZ_QUESTIONS = [
   { q:"What's a good pace for a relationship's big decisions (moving, marriage, kids)?", opts:["Sooner rather than later","Whenever it feels right, no timeline","Carefully planned out","Let life decide"] },
 ];
 
-function buildQuizTaker(personKey, containerId, otherKey){
+function buildQuizTaker(personKey, containerId){
   const container = document.getElementById(containerId);
-  const KEY = 'md_quiz_' + personKey;
+  const me = getPerson();
+  const mine = personKey === me;
+  const MIRROR_KEY = 'md_quiz_' + personKey + '_mirror';
+  const LEGACY_KEY = 'md_quiz_' + personKey;
 
-  let answers = null;
-  try{ answers = JSON.parse(localStorage.getItem(KEY) || 'null'); } catch(e){}
+  let locked = null;
+  try{
+    const saved = JSON.parse(localStorage.getItem(MIRROR_KEY) || 'null');
+    if(Array.isArray(saved)) locked = saved;
+  } catch(e){}
 
-  if(answers){
+  function mirror(val){
+    try{
+      if(val) localStorage.setItem(MIRROR_KEY, JSON.stringify(val));
+      else localStorage.removeItem(MIRROR_KEY);
+    } catch(e){}
+  }
+
+  function renderLocked(){
     container.innerHTML = '';
     const done = document.createElement('div');
     done.className = 'quiz-done';
-    done.textContent = '✓ Answers locked in';
+    done.textContent = mine ? '✓ Answers locked in' : `✓ ${personLabel(personKey)} has locked in their answers`;
     container.appendChild(done);
-    const resetBtn = document.createElement('button');
-    resetBtn.className = 'guess-reset';
-    resetBtn.style.marginTop = '10px';
-    resetBtn.textContent = 'Retake quiz';
-    resetBtn.addEventListener('click', ()=>{
-      localStorage.removeItem(KEY);
-      buildQuizTaker(personKey, containerId, otherKey);
-      renderQuizResult();
-    });
-    container.appendChild(resetBtn);
-    return;
+    if(mine){
+      const resetBtn = document.createElement('button');
+      resetBtn.className = 'guess-reset';
+      resetBtn.style.marginTop = '10px';
+      resetBtn.textContent = 'Retake quiz';
+      resetBtn.addEventListener('click', ()=>{
+        locked = null;
+        mirror(null);
+        const trySync = ()=> sb.from('quiz_answers').update({ answers:null, locked_at:null }).eq('person', personKey).then(({ error })=>{
+          if(error) window.addEventListener('online', trySync, { once:true });
+        });
+        trySync();
+        render();
+      });
+      container.appendChild(resetBtn);
+    }
   }
 
-  container.innerHTML = '';
-  const picks = new Array(QUIZ_QUESTIONS.length).fill(null);
+  function renderWaitingForOther(){
+    container.innerHTML = '';
+    const waiting = document.createElement('div');
+    waiting.className = 'quiz-waiting';
+    waiting.textContent = `Waiting for ${personLabel(personKey)} to answer…`;
+    container.appendChild(waiting);
+  }
 
-  QUIZ_QUESTIONS.forEach((item, qi)=>{
-    const block = document.createElement('div');
-    block.className = 'quiz-q';
-    const qText = document.createElement('div');
-    qText.className = 'quiz-q-text';
-    qText.textContent = (qi+1) + '. ' + item.q;
-    block.appendChild(qText);
-    item.opts.forEach((opt, oi)=>{
-      const label = document.createElement('label');
-      label.className = 'quiz-opt';
-      const radio = document.createElement('input');
-      radio.type = 'radio';
-      radio.name = personKey + '-q' + qi;
-      radio.addEventListener('change', ()=>{ picks[qi] = oi; });
-      const span = document.createElement('span');
-      span.textContent = opt;
-      label.appendChild(radio);
-      label.appendChild(span);
-      block.appendChild(label);
+  function renderPicker(){
+    container.innerHTML = '';
+    const picks = new Array(QUIZ_QUESTIONS.length).fill(null);
+
+    QUIZ_QUESTIONS.forEach((item, qi)=>{
+      const block = document.createElement('div');
+      block.className = 'quiz-q';
+      const qText = document.createElement('div');
+      qText.className = 'quiz-q-text';
+      qText.textContent = (qi+1) + '. ' + item.q;
+      block.appendChild(qText);
+      item.opts.forEach((opt, oi)=>{
+        const label = document.createElement('label');
+        label.className = 'quiz-opt';
+        const radio = document.createElement('input');
+        radio.type = 'radio';
+        radio.name = personKey + '-q' + qi;
+        radio.addEventListener('change', ()=>{ picks[qi] = oi; });
+        const span = document.createElement('span');
+        span.textContent = opt;
+        label.appendChild(radio);
+        label.appendChild(span);
+        block.appendChild(label);
+      });
+      container.appendChild(block);
     });
-    container.appendChild(block);
-  });
 
-  const submitBtn = document.createElement('button');
-  submitBtn.className = 'quiz-submit';
-  submitBtn.textContent = 'Lock in my answers';
-  submitBtn.addEventListener('click', ()=>{
-    if(picks.some(p => p === null)){
-      submitBtn.textContent = 'Answer everything first';
-      setTimeout(()=> submitBtn.textContent = 'Lock in my answers', 1500);
+    const submitBtn = document.createElement('button');
+    submitBtn.className = 'quiz-submit';
+    submitBtn.textContent = 'Lock in my answers';
+    submitBtn.addEventListener('click', ()=>{
+      if(picks.some(p => p === null)){
+        submitBtn.textContent = 'Answer everything first';
+        setTimeout(()=> submitBtn.textContent = 'Lock in my answers', 1500);
+        return;
+      }
+      locked = picks;
+      mirror(picks);
+      const trySync = ()=> sb.from('quiz_answers').update({ answers: picks, locked_at: new Date().toISOString() }).eq('person', personKey).then(({ error })=>{
+        if(error) window.addEventListener('online', trySync, { once:true });
+      });
+      trySync();
+      render();
+    });
+    container.appendChild(submitBtn);
+  }
+
+  function render(){
+    if(locked) renderLocked();
+    else if(mine) renderPicker();
+    else renderWaitingForOther();
+  }
+
+  render();
+
+  sb.from('quiz_answers').select('*').eq('person', personKey).maybeSingle().then(({ data })=>{
+    if(data && data.answers){
+      locked = data.answers;
+      mirror(locked);
+      render();
       return;
     }
-    try{ localStorage.setItem(KEY, JSON.stringify(picks)); } catch(e){}
-    buildQuizTaker(personKey, containerId, otherKey);
-    renderQuizResult();
+    if(mine){
+      let legacy = null;
+      try{ legacy = JSON.parse(localStorage.getItem(LEGACY_KEY) || 'null'); } catch(e){}
+      if(Array.isArray(legacy)){
+        locked = legacy;
+        mirror(legacy);
+        sb.from('quiz_answers').update({ answers: legacy, locked_at: new Date().toISOString() }).eq('person', personKey).then(()=>{});
+        render();
+      }
+    }
   });
-  container.appendChild(submitBtn);
+
+  sb.channel('quiz-' + personKey)
+    .on('postgres_changes', { event:'*', schema:'public', table:'quiz_answers', filter:'person=eq.' + personKey }, (payload)=>{
+      const row = payload.new;
+      if(!row) return;
+      locked = row.answers || null;
+      mirror(locked);
+      render();
+      renderQuizResult();
+    })
+    .subscribe();
 }
 
 function renderQuizResult(){
   const resultEl = document.getElementById('quizResult');
-  let mj = null, ew = null;
-  try{ mj = JSON.parse(localStorage.getItem('md_quiz_mj') || 'null'); } catch(e){}
-  try{ ew = JSON.parse(localStorage.getItem('md_quiz_ew') || 'null'); } catch(e){}
+  sb.from('quiz_answers').select('*').then(({ data })=>{
+    const mjRow = (data || []).find(r => r.person === 'mj');
+    const ewRow = (data || []).find(r => r.person === 'ew');
+    const mj = mjRow && mjRow.answers;
+    const ew = ewRow && ewRow.answers;
 
-  resultEl.innerHTML = '';
-  if(!mj || !ew){
-    const waiting = document.createElement('div');
-    waiting.className = 'quiz-waiting';
-    waiting.textContent = 'Once both of you have locked in your answers (on this device), your compatibility score shows up here.';
-    resultEl.appendChild(waiting);
-    return;
-  }
+    resultEl.innerHTML = '';
+    if(!mj || !ew){
+      const waiting = document.createElement('div');
+      waiting.className = 'quiz-waiting';
+      waiting.textContent = 'Once both of you have locked in your answers, your compatibility score shows up here.';
+      resultEl.appendChild(waiting);
+      return;
+    }
 
-  let matches = 0;
-  const rows = QUIZ_QUESTIONS.map((item, qi)=>{
-    const isMatch = mj[qi] === ew[qi];
-    if(isMatch) matches++;
-    return { q:item.q, isMatch, mjAns: item.opts[mj[qi]], ewAns: item.opts[ew[qi]] };
+    let matches = 0;
+    const rows = QUIZ_QUESTIONS.map((item, qi)=>{
+      const isMatch = mj[qi] === ew[qi];
+      if(isMatch) matches++;
+      return { q:item.q, isMatch, mjAns: item.opts[mj[qi]], ewAns: item.opts[ew[qi]] };
+    });
+    const pct = Math.round((matches / QUIZ_QUESTIONS.length) * 100);
+
+    const score = document.createElement('div');
+    score.className = 'quiz-score';
+    score.textContent = pct + '%';
+    resultEl.appendChild(score);
+
+    const label = document.createElement('div');
+    label.className = 'quiz-score-label';
+    label.textContent = `COMPATIBILITY · ${matches} of ${QUIZ_QUESTIONS.length} matched`;
+    resultEl.appendChild(label);
+
+    const breakdown = document.createElement('div');
+    breakdown.className = 'quiz-breakdown';
+    rows.forEach(r=>{
+      const row = document.createElement('div');
+      row.className = 'quiz-breakdown-row';
+      const q = document.createElement('span');
+      q.textContent = r.q;
+      const ans = document.createElement('span');
+      ans.className = r.isMatch ? 'm' : 'x';
+      ans.textContent = r.isMatch ? '✓ ' + r.mjAns : `MJ: ${r.mjAns} / EW: ${r.ewAns}`;
+      row.appendChild(q);
+      row.appendChild(ans);
+      breakdown.appendChild(row);
+    });
+    resultEl.appendChild(breakdown);
   });
-  const pct = Math.round((matches / QUIZ_QUESTIONS.length) * 100);
-
-  const score = document.createElement('div');
-  score.className = 'quiz-score';
-  score.textContent = pct + '%';
-  resultEl.appendChild(score);
-
-  const label = document.createElement('div');
-  label.className = 'quiz-score-label';
-  label.textContent = `COMPATIBILITY · ${matches} of ${QUIZ_QUESTIONS.length} matched`;
-  resultEl.appendChild(label);
-
-  const breakdown = document.createElement('div');
-  breakdown.className = 'quiz-breakdown';
-  rows.forEach(r=>{
-    const row = document.createElement('div');
-    row.className = 'quiz-breakdown-row';
-    const q = document.createElement('span');
-    q.textContent = r.q;
-    const ans = document.createElement('span');
-    ans.className = r.isMatch ? 'm' : 'x';
-    ans.textContent = r.isMatch ? '✓ ' + r.mjAns : `MJ: ${r.mjAns} / EW: ${r.ewAns}`;
-    row.appendChild(q);
-    row.appendChild(ans);
-    breakdown.appendChild(row);
-  });
-  resultEl.appendChild(breakdown);
 }
 
-buildQuizTaker('mj', 'quizBody-mj', 'ew');
-buildQuizTaker('ew', 'quizBody-ew', 'mj');
+buildQuizTaker('mj', 'quizBody-mj');
+buildQuizTaker('ew', 'quizBody-ew');
 renderQuizResult();
 
 /* ---------------- bucket list ---------------- */
 (function(){
-  const KEY = 'md_bucketlist';
+  const LEGACY_KEY = 'md_bucketlist';
+  const SEED_FLAG = 'md_bucketlist_seeded';
+  const MIRROR_KEY = 'md_bucketlist_mirror';
   const DEFAULTS = [
     { text: "Mushroom trip outside Nairobi", checked: false },
     { text: "Long weekend safari, phones off", checked: false },
@@ -1741,25 +2189,21 @@ renderQuizResult();
     { text: "Start a two-person book club — pick something dense and argue about it", checked: false },
   ];
 
-  let items = [];
-  try{
-    const saved = JSON.parse(localStorage.getItem(KEY) || 'null');
-    items = Array.isArray(saved) ? saved : DEFAULTS.slice();
-  } catch(e){
-    items = DEFAULTS.slice();
-  }
-
   const listEl = document.getElementById('bucketList');
   const input = document.getElementById('bucketInput');
   const addBtn = document.getElementById('bucketAddBtn');
 
-  function persist(){
-    try{ localStorage.setItem(KEY, JSON.stringify(items)); } catch(e){}
+  // Instant paint from whatever we last saw, while the real fetch is in flight.
+  let items = [];
+  try{ items = JSON.parse(localStorage.getItem(MIRROR_KEY) || '[]'); } catch(e){}
+
+  function mirror(){
+    try{ localStorage.setItem(MIRROR_KEY, JSON.stringify(items)); } catch(e){}
   }
 
   function render(){
     listEl.innerHTML = '';
-    items.forEach((item, idx)=>{
+    items.forEach(item=>{
       const li = document.createElement('li');
       li.className = 'bucket-item' + (item.checked ? ' checked' : '');
 
@@ -1767,11 +2211,7 @@ renderQuizResult();
       check.className = 'bucket-check' + (item.checked ? ' checked' : '');
       check.setAttribute('aria-label', 'Mark done');
       check.textContent = item.checked ? '✓' : '';
-      check.addEventListener('click', ()=>{
-        items[idx].checked = !items[idx].checked;
-        persist();
-        render();
-      });
+      check.addEventListener('click', ()=> toggleItem(item));
 
       const text = document.createElement('span');
       text.className = 'bucket-text';
@@ -1781,101 +2221,247 @@ renderQuizResult();
       remove.className = 'bucket-remove';
       remove.textContent = '✕';
       remove.setAttribute('aria-label', 'Remove');
-      remove.addEventListener('click', ()=>{
-        items.splice(idx,1);
-        persist();
-        render();
-      });
+      remove.addEventListener('click', ()=> removeItem(item));
 
       li.appendChild(check);
       li.appendChild(text);
       li.appendChild(remove);
       listEl.appendChild(li);
     });
+    mirror();
   }
+
+  function isTemp(id){ return typeof id === 'string' && id.indexOf('tmp-') === 0; }
 
   function addItem(){
     const val = input.value.trim();
     if(!val) return;
-    items.push({ text: val, checked: false });
     input.value = '';
-    persist();
+    const item = { id: 'tmp-' + Date.now() + '-' + Math.random(), text: val, checked: false };
+    items.push(item);
     render();
+
+    const trySync = ()=>{
+      sb.from('bucket_items').insert({ text: item.text, checked: item.checked }).select().single().then(({ data, error })=>{
+        if(error){ window.addEventListener('online', trySync, { once:true }); return; }
+        const stillHere = items.indexOf(item) !== -1;
+        if(!stillHere){
+          // user deleted it locally before the sync landed — undo on the server too
+          sb.from('bucket_items').delete().eq('id', data.id).then(()=>{});
+          return;
+        }
+        item.id = data.id;
+        // carry over any checked-state change that happened before this resolved
+        if(item.checked !== data.checked){
+          sb.from('bucket_items').update({ checked: item.checked }).eq('id', data.id).then(()=>{});
+        }
+        render();
+      });
+    };
+    trySync();
   }
+
+  function toggleItem(item){
+    item.checked = !item.checked;
+    render();
+    if(isTemp(item.id)) return; // will be carried over once the add finishes syncing
+    const trySync = ()=>{
+      sb.from('bucket_items').update({ checked: item.checked }).eq('id', item.id).then(({ error })=>{
+        if(error) window.addEventListener('online', trySync, { once:true });
+      });
+    };
+    trySync();
+  }
+
+  function removeItem(item){
+    items = items.filter(it => it !== item);
+    render();
+    if(isTemp(item.id)) return; // the pending insert will notice it's gone and clean up
+    const trySync = ()=>{
+      sb.from('bucket_items').delete().eq('id', item.id).then(({ error })=>{
+        if(error) window.addEventListener('online', trySync, { once:true });
+      });
+    };
+    trySync();
+  }
+
   addBtn.addEventListener('click', addItem);
   input.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addItem(); });
 
-  render();
+  function refetch(){
+    sb.from('bucket_items').select('*').order('created_at', { ascending:true }).then(({ data })=>{
+      if(!data) return;
+      const pending = items.filter(it => isTemp(it.id));
+      items = data.concat(pending);
+      render();
+    });
+  }
+
+  sb.from('bucket_items').select('*').order('created_at', { ascending:true }).then(({ data })=>{
+    if(data && data.length){
+      items = data;
+      render();
+      return;
+    }
+    if(localStorage.getItem(SEED_FLAG)){
+      items = [];
+      render();
+      return;
+    }
+    // First run: carry over pre-sync local items if there were any, else start from the defaults.
+    let seedItems = DEFAULTS;
+    try{
+      const saved = JSON.parse(localStorage.getItem(LEGACY_KEY) || 'null');
+      if(Array.isArray(saved) && saved.length) seedItems = saved;
+    } catch(e){}
+    localStorage.setItem(SEED_FLAG, '1');
+    sb.from('bucket_items').insert(seedItems.map(it => ({ text: it.text, checked: !!it.checked }))).select().then(({ data: inserted })=>{
+      items = inserted || [];
+      render();
+    });
+  });
+
+  sb.channel('bucket-items')
+    .on('postgres_changes', { event:'*', schema:'public', table:'bucket_items' }, refetch)
+    .subscribe();
 })();
 
 /* ---------------- world map ---------------- */
-// PLACEHOLDER DATA — replace names/coords with your real picks.
-// lat: -90 to 90 (N positive), lon: -180 to 180 (E positive)
-const MAP_LIVE = [
-  { name:"Lisbon (placeholder — MJ pick)", lat:38.72, lon:-9.14 },
-  { name:"Medellín (placeholder — MJ pick)", lat:6.24, lon:-75.58 },
-  { name:"Cape Town (placeholder — MJ pick)", lat:-33.92, lon:18.42 },
-  { name:"Ghent (placeholder — EW pick)", lat:51.05, lon:3.72 },
-  { name:"Copenhagen (placeholder — EW pick)", lat:55.68, lon:12.57 },
-  { name:"Nairobi (placeholder — EW pick)", lat:-1.29, lon:36.82 },
-];
-const MAP_VISIT = [
-  { name:"Tokyo (placeholder)", lat:35.68, lon:139.69 },
-  { name:"Patagonia (placeholder)", lat:-49.33, lon:-72.86 },
-  { name:"Marrakech (placeholder)", lat:31.63, lon:-7.99 },
-];
-const MAP_BEEN_EW = [
-  { name:"Cairo (placeholder)", lat:30.04, lon:31.24 },
-  { name:"Ghent (placeholder)", lat:51.05, lon:3.72 },
-  { name:"Warsaw (placeholder)", lat:52.23, lon:21.01 },
-];
-const MAP_BEEN_MJ = [
-  { name:"Bogotá (placeholder)", lat:4.71, lon:-74.07 },
-  { name:"Nairobi (placeholder)", lat:-1.29, lon:36.82 },
-  { name:"Perth (placeholder)", lat:-31.95, lon:115.86 },
-];
-
 (function(){
   const svgNS = 'http://www.w3.org/2000/svg';
   const svg = document.getElementById('worldmap');
   if(!svg) return;
 
-  // Projection calibrated to this specific map's coordinate space
-  // (fit against several country centroids; approximate, not survey-grade)
+  // Live/visit pins use lat/lon through this hand-calibrated projection.
   const A = 2.45656, B = 405.2656; // x = A*lon + B
   const C = -2.68818, D = 530.9428; // y = C*lat + D
   function toXY(lat, lon){ return [A*lon + B, C*lat + D]; }
 
-  function plot(list, color, rOuter){
-    list.forEach(p=>{
-      const [x,y] = toXY(p.lat, p.lon);
-      const g = document.createElementNS(svgNS,'g');
-      g.setAttribute('class','map-pin');
-
-      const glow = document.createElementNS(svgNS,'circle');
-      glow.setAttribute('cx',x); glow.setAttribute('cy',y); glow.setAttribute('r', rOuter+2.2);
-      glow.setAttribute('fill', color); glow.setAttribute('opacity','0.22');
-      g.appendChild(glow);
-
-      const dot = document.createElementNS(svgNS,'circle');
-      dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.setAttribute('r', rOuter);
-      dot.setAttribute('fill', color);
-      g.appendChild(dot);
-
-      const label = document.createElementNS(svgNS,'text');
-      label.setAttribute('x', x); label.setAttribute('y', y - rOuter - 3);
-      label.setAttribute('text-anchor','middle');
-      label.textContent = p.name;
-      g.appendChild(label);
-
-      svg.appendChild(g);
-    });
+  // "Been" pins instead use the actual country shape already drawn on this
+  // map, so they always land in the right place with no lat/lon needed.
+  function countryXY(code){
+    const el = svg.querySelector('#' + CSS.escape(code));
+    if(!el || !el.getBBox) return null;
+    const bbox = el.getBBox();
+    return [bbox.x + bbox.width/2, bbox.y + bbox.height/2];
   }
 
-  plot(MAP_VISIT, '#5b93a0', 3.6);
-  plot(MAP_BEEN_EW, '#b5651d', 3.6);
-  plot(MAP_BEEN_MJ, '#9bcf8e', 3.6);
-  plot(MAP_LIVE, '#cc9c3c', 4.2);
+  const pinsLayer = document.createElementNS(svgNS, 'g');
+  pinsLayer.id = 'mapPins';
+  svg.appendChild(pinsLayer);
+
+  function addPin(xy, name, color, rOuter){
+    if(!xy) return;
+    const [x,y] = xy;
+    const g = document.createElementNS(svgNS,'g');
+    g.setAttribute('class','map-pin');
+
+    const glow = document.createElementNS(svgNS,'circle');
+    glow.setAttribute('cx',x); glow.setAttribute('cy',y); glow.setAttribute('r', rOuter+2.2);
+    glow.setAttribute('fill', color); glow.setAttribute('opacity','0.22');
+    g.appendChild(glow);
+
+    const dot = document.createElementNS(svgNS,'circle');
+    dot.setAttribute('cx',x); dot.setAttribute('cy',y); dot.setAttribute('r', rOuter);
+    dot.setAttribute('fill', color);
+    g.appendChild(dot);
+
+    const label = document.createElementNS(svgNS,'text');
+    label.setAttribute('x', x); label.setAttribute('y', y - rOuter - 3);
+    label.setAttribute('text-anchor','middle');
+    label.textContent = name;
+    g.appendChild(label);
+
+    pinsLayer.appendChild(g);
+  }
+
+  let placesData = [];
+  let beenData = [];
+
+  const listEl = document.getElementById('mapPlaceList');
+  function renderPlaceList(){
+    listEl.innerHTML = '';
+    placesData
+      .slice()
+      .sort((a,b)=> a.category.localeCompare(b.category) || a.name.localeCompare(b.name))
+      .forEach(p=>{
+        const li = document.createElement('li');
+        li.className = 'bucket-item';
+        const text = document.createElement('span');
+        text.className = 'bucket-text';
+        text.textContent = (p.category === 'live' ? '🏡 ' : '🧭 ') + p.name;
+        const remove = document.createElement('button');
+        remove.className = 'bucket-remove';
+        remove.textContent = '✕';
+        remove.setAttribute('aria-label', 'Remove');
+        remove.addEventListener('click', ()=>{
+          sb.from('map_places').delete().eq('id', p.id).then(()=>{});
+        });
+        li.appendChild(text);
+        li.appendChild(remove);
+        listEl.appendChild(li);
+      });
+  }
+
+  function redrawPins(){
+    pinsLayer.innerHTML = '';
+    placesData.filter(p=> p.category === 'visit').forEach(p=> addPin(toXY(p.lat, p.lon), p.name, '#5b93a0', 3.6));
+    beenData.filter(p=> p.subject === 'ew').forEach(p=> addPin(countryXY(p.country_code), p.country_name, '#b5651d', 3.6));
+    beenData.filter(p=> p.subject === 'mj').forEach(p=> addPin(countryXY(p.country_code), p.country_name, '#9bcf8e', 3.6));
+    placesData.filter(p=> p.category === 'live').forEach(p=> addPin(toXY(p.lat, p.lon), p.name, '#cc9c3c', 4.2));
+  }
+
+  function loadAll(){
+    Promise.all([
+      sb.from('map_places').select('*'),
+      sb.from('map_been_pins').select('*')
+    ]).then(([placesRes, beenRes])=>{
+      placesData = placesRes.data || [];
+      beenData = beenRes.data || [];
+      redrawPins();
+      renderPlaceList();
+    });
+  }
+  loadAll();
+
+  sb.channel('map-places-changes').on('postgres_changes', { event:'*', schema:'public', table:'map_places' }, loadAll).subscribe();
+  sb.channel('map-been-pins-changes').on('postgres_changes', { event:'*', schema:'public', table:'map_been_pins' }, loadAll).subscribe();
+
+  async function geocode(name){
+    const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(name);
+    const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+    if(!res.ok) throw new Error('lookup failed');
+    const results = await res.json();
+    if(!results.length) return null;
+    return { lat: parseFloat(results[0].lat), lon: parseFloat(results[0].lon) };
+  }
+
+  const catSelect = document.getElementById('mapPlaceCategory');
+  const nameInput = document.getElementById('mapPlaceInput');
+  const addBtn = document.getElementById('mapPlaceAddBtn');
+  const statusEl = document.getElementById('mapAddStatus');
+
+  async function addPlace(){
+    const name = nameInput.value.trim();
+    if(!name) return;
+    addBtn.disabled = true;
+    statusEl.textContent = 'Looking up ' + name + '…';
+    try{
+      const coords = await geocode(name);
+      if(!coords){
+        statusEl.textContent = "Couldn't find that place — try a different spelling?";
+      } else {
+        const { error } = await sb.from('map_places').insert({ category: catSelect.value, name, lat: coords.lat, lon: coords.lon });
+        statusEl.textContent = error ? "Couldn't save that just now — try again?" : '';
+        if(!error) nameInput.value = '';
+      }
+    } catch(e){
+      statusEl.textContent = "Couldn't reach the map lookup — try again?";
+    }
+    addBtn.disabled = false;
+  }
+  addBtn.addEventListener('click', addPlace);
+  nameInput.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') addPlace(); });
 })();
 </script>
 </body>
